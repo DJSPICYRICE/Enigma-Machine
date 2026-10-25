@@ -51,8 +51,29 @@ def encode(r1, r2, r3, letter):
     return letter
 
 
+DIGIT_WORDS = ["ZERO", "ONE", "TWO", "THREE", "FOUR",
+               "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
+
+
+# turns spaces into X and writes out numbers (55 -> FIVEXFIVE)
+def prepare(text):
+    text = text.upper()
+    result = ""
+    for i, ch in enumerate(text):
+        if ch == " ":
+            result += "X"
+        elif ch.isdigit():
+            if i > 0 and text[i - 1].isdigit():
+                result += "X"  # separate digits in the same number
+            result += DIGIT_WORDS[int(ch)]
+        elif ch in straight_letters:
+            result += ch
+        # anything else (punctuation) is dropped
+    return result
+
+
 if __name__ == "__main__":
-    text = input("Enter text: ").upper()
+    text = prepare(input("Enter text: "))
     output = ""
     for ch in text:
         output += encode(roter1, roter2, roter3, ch)
